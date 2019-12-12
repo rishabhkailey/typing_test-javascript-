@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+	
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<script>
+	var scripts={};
+	function initialise_scripts()
+	{
+		var apple="An apple is a sweet, edible fruit produced by an apple tree (Malus domestica). Apple trees are cultivated worldwide and are the most widely grown species in the genus Malus. The tree originated in Central Asia, where its wild ancestor, Malus sieversii, is still found today. Apples have been grown for thousands of years in Asia and Europe and were brought to North America by European colonists. Apples have religious and mythological significance in many cultures, including Norse, Greek and European Christian traditions.Apple trees are large if grown from seed. Generally, apple cultivars are propagated by grafting onto rootstocks, which control the size of the resulting tree. There are more than 7,500 known cultivars of apples, resulting in a range of desired characteristics. Different cultivars are bred for various tastes and use, including cooking, eating raw and cider production. Trees and fruit are prone to a number of fungal, bacterial and pest problems, which can be controlled by a number of organic and non-organic means. In 2010, the fruit's genome was sequenced as part of research on disease control and selective breeding in apple production.";
+		scripts['0']=apple;
+	}
+
+
+	function create_pre_tags(a)
+	{
+		var x = a.length;
+		var i;
+		var br = document.createElement("BR");
+		var n = 66;//no of char in a line
+		
+		var ratio = 20/1366;//size/window.innerWidth
+		var font_size;// = 20+'px';
+
+		font_size = parseInt(ratio*1366)+'px';//window.innerWidth)+'px';
+
+		// alert(window.innerWidth);
+		$('.krta').css('font-size',font_size);
+		for(i=0;i<x;i+=n)
+		{
+			let pre = document.createElement('pre');
+			pre.innerHTML = a.substring(i,i+n)+'\n';
+			pre.className='krna';
+			pre.style='display: inline;font-size:'+font_size;
+			document.body.appendChild(pre);
+			// document.body.appendChild(br);
+		}
+	}
+	
+	$(document).ready(function()
+	{
+		initialise_scripts();
+
+		var choose_script=parseInt(Math.random()*100)%1;
+		
+		create_pre_tags(scripts[choose_script])
+		document.getElementById("input").focus();
+	});
+</script>
+
+</head>
+<body>
+	<DIV style='position: absolute;top: 7px;left: 714px;height: 10px;width: 10px;' id='timer'>0</DIV>
+	<div class='border' style="width: 12px;height: 24px;position: absolute;top: 26px;left: 6px;border-left: 1px solid black;"></div>
+	<input style="opacity: 1; placeholder='click here' position: absolute;" type="text" name="type" id="input">
+<br>
+	<div style="font-size: 0px;display: inline;"><!--font size 0 so that space between span tags = 0px-->
+		<pre class="krta" style="background-color: #d2d2d2;display: inline;"></pre>
+		<!-- <pre class="krna" style="font-size: 20px;display: inline;"></pre>
+	  --></div>
+<!-- 	  <pre class='krna' style='display: inline;font-size: 10px;'>abc</pre>
+ --><script>
+	 	function start_timer()
+		{
+			// 	alert('timer start');
+			setInterval(function(){
+				document.getElementById('timer').innerHTML = parseInt(document.getElementById('timer').innerHTML) + 1;
+			},1000)
+		}
+
+		let index = 0;
+		let timer = 0;
+		let border_state = 1;//black border(1)
+		function mark_wrong(a,b)
+		{
+			// alert(a+' '+b);
+			var div = document.createElement('div');
+			div.style = 'position: absolute;top:'+a+';left:'+b+';height:'+24+'px;width:'+12+'px;background-color:'+'red;opacity: .4;';
+			document.body.appendChild(div);
+		}
+		setInterval(function(){
+		let a=document.getElementsByClassName('krna')[index].innerHTML;
+		if(a.length == 1)
+		{
+			// alert('index ++');
+			// document.getElementsByClassName('krna').style.display='none';
+			document.getElementsByClassName("krna")[index].style.display = "none";
+			index++;
+			$('.border').css('left','6px');
+			$('.border').css('top',23+parseInt($('.border').css('top')));	
+			document.getElementsByClassName('krta')[0].innerHTML+='\n';
+			return;
+		}
+		var input = $('#input').val();
+		if(input.length == 0)
+		{
+			return;
+		}
+		else{
+			// alert(a.length);
+				var totype = a.substring(0,1);
+				 // alert(input+' '+totype);
+				if(input.localeCompare(totype)==0)
+				{
+					if(timer == 0)
+					{
+						start_timer();
+					}
+					timer = 1;
+					if(border_state == 0)
+					{
+						$('.border').css('border-left','1px solid black');
+						border_state = 1;
+					}
+					document.getElementsByClassName('krna')[index].innerHTML=a.substring(1);
+					$('.krta').text($('.krta').text()+totype);
+					$('.border').css('left',11+parseInt($('.border').css('left')));
+					// alert($('.border').css('left'));
+					// $('.krna').text( ($('.krna').text()).substring(1,a.length))				
+				}
+				else
+				{					
+					
+					$('.border').css('border-left','2px solid red');
+					$('.border').animate({left:'-=3px'},3)
+					$('.border').animate({left:'+=6px'},3)
+					$('.border').animate({left:'-=3px'},3)
+					$('.border').animate({borderLeft:'1px solid black'},3)
+
+					// if(border_state == 1)
+					// 	setTimeout(mark_wrong($('.border').css('top'),$('.border').css('left')),50);
+					
+					border_state = 0;//red
+				
+				}
+
+				// alert('typed = ' + $('#input').val()+' xx'+document.getElementsByClassName('krna')[0].innerHTML);
+
+				input = 0;
+				$('#input').val('')
+			}
+	},10);
+	</script>
+</body>
+</html>
